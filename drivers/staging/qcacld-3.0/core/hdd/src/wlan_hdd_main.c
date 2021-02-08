@@ -162,6 +162,8 @@
 #include "wlan_mlme_ucfg_api.h"
 #include "wlan_fwol_ucfg_api.h"
 #include "wlan_policy_mgr_ucfg.h"
+#include "qdf_func_tracker.h"
+
 #ifdef CNSS_GENL
 #include <net/cnss_nl.h>
 #endif
@@ -2165,7 +2167,7 @@ int hdd_update_tgt_cfg(hdd_handle_t hdd_handle, struct wma_tgt_cfg *cfg)
 {
 	int ret;
 	struct hdd_context *hdd_ctx = hdd_handle_to_context(hdd_handle);
-	uint8_t temp_band_cap, band_capability;
+	uint32_t temp_band_cap, band_capability;
 	struct cds_config_info *cds_cfg = cds_get_ini_config();
 	uint8_t antenna_mode;
 	uint8_t sub_20_chan_width;
@@ -2257,17 +2259,14 @@ int hdd_update_tgt_cfg(hdd_handle_t hdd_handle, struct wma_tgt_cfg *cfg)
 			cfg->services.is_11k_offload_supported;
 
 	/*
-	 * now overwrite the target band capability with INI
-	 * setting if INI setting is a subset
+	 * merge the target band capability with INI setting if the merge has
+	 * at least 1 band enabled
 	 */
-	if ((band_capability == BAND_ALL) &&
-	    (temp_band_cap != BAND_ALL))
-		band_capability = temp_band_cap;
-	else if ((band_capability != BAND_ALL) &&
-		 (temp_band_cap != BAND_ALL) &&
-		 (band_capability != temp_band_cap)) {
+	temp_band_cap &= band_capability;
+	if (!temp_band_cap)
 		hdd_warn("ini BandCapability not supported by the target");
-	}
+	else
+		band_capability = temp_band_cap;
 
 	status = ucfg_mlme_set_band_capability(hdd_ctx->psoc, band_capability);
 	if (QDF_IS_STATUS_ERROR(status)) {
@@ -3104,34 +3103,6 @@ int hdd_assemble_rate_code(uint8_t preamble, uint8_t nss, uint8_t rate)
 	return set_value;
 }
 
-#ifdef FEATURE_WLAN_WAPI
-/**
- * hdd_wapi_security_sta_exist() - return wapi security sta exist or not
- *
- * This API returns the wapi security station exist or not
- *
- * Return: true - wapi security station exist
- */
-static bool hdd_wapi_security_sta_exist(void)
-{
-	struct hdd_adapter *adapter = NULL;
-	struct hdd_context *hdd_ctx = cds_get_context(QDF_MODULE_ID_HDD);
-
-	hdd_for_each_adapter(hdd_ctx, adapter) {
-		if ((adapter->device_mode == QDF_STA_MODE) &&
-		    adapter->wapi_info.wapi_mode &&
-		    (adapter->wapi_info.wapi_auth_mode != WAPI_AUTH_MODE_OPEN))
-			return true;
-	}
-	return false;
-}
-#else
-static bool hdd_wapi_security_sta_exist(void)
-{
-	return false;
-}
-#endif
-
 #ifdef FEATURE_WLAN_MCC_TO_SCC_SWITCH
 static enum policy_mgr_con_mode wlan_hdd_get_mode_for_non_connected_vdev(
 			struct wlan_objmgr_psoc *psoc, uint8_t vdev_id)
@@ -3204,8 +3175,6 @@ static void hdd_register_policy_manager_callback(
 	hdd_cbacks.get_mode_for_non_connected_vdev =
 		wlan_hdd_get_mode_for_non_connected_vdev;
 	hdd_cbacks.hdd_get_device_mode = hdd_get_device_mode;
-	hdd_cbacks.hdd_wapi_security_sta_exist =
-		hdd_wapi_security_sta_exist;
 	hdd_cbacks.hdd_is_chan_switch_in_progress =
 				hdd_is_chan_switch_in_progress;
 	hdd_cbacks.hdd_is_cac_in_progress =
@@ -4924,10 +4893,6 @@ hdd_alloc_station_adapter(struct hdd_context *hdd_ctx, tSirMacAddr mac_addr,
 		goto free_net_dev;
 	}
 
-	qdf_status = hdd_adapter_feature_update_work_init(adapter);
-	if (QDF_IS_STATUS_ERROR(qdf_status))
-		goto free_net_dev;
-
 	init_completion(&adapter->vdev_destroy_event);
 
 	adapter->offloads_configured = false;
@@ -5544,7 +5509,6 @@ static void hdd_cleanup_adapter(struct hdd_context *hdd_ctx,
 		hdd_sysfs_destroy_adapter_root_obj(adapter);
 
 	hdd_debugfs_exit(adapter);
-	hdd_adapter_feature_update_work_deinit(adapter);
 
 	/*
 	 * The adapter is marked as closed. When hdd_wlan_exit() call returns,
@@ -6284,7 +6248,11 @@ struct hdd_adapter *hdd_open_adapter(struct hdd_context *hdd_ctx, uint8_t sessio
 		return NULL;
 	}
 
-	adapter->upgrade_udp_qos_threshold = QCA_WLAN_AC_BE;
+	status = hdd_adapter_feature_update_work_init(adapter);
+	if (QDF_IS_STATUS_ERROR(status))
+		goto err_cleanup_adapter;
+
+	adapter->upgrade_udp_qos_threshold = QCA_WLAN_AC_BK;
 	qdf_spinlock_create(&adapter->vdev_lock);
 	qdf_atomic_init(&hdd_ctx->num_latency_critical_clients);
 
@@ -6299,33 +6267,21 @@ struct hdd_adapter *hdd_open_adapter(struct hdd_context *hdd_ctx, uint8_t sessio
 	hdd_sta_info_init(&adapter->sta_info_list);
 	hdd_sta_info_init(&adapter->cache_sta_info_list);
 
-	if (QDF_STATUS_SUCCESS == status) {
-		/* Add it to the hdd's session list. */
-		status = hdd_add_adapter_back(hdd_ctx, adapter);
-	}
+	/* Add it to the hdd's session list. */
+	status = hdd_add_adapter_back(hdd_ctx, adapter);
+	if (QDF_STATUS_SUCCESS != status)
+		goto err_destroy_adapter_features_update_work;
 
-	if (QDF_STATUS_SUCCESS != status) {
-		if (adapter) {
-			hdd_cleanup_adapter(hdd_ctx, adapter, rtnl_held);
-			adapter = NULL;
-		}
-
-		return NULL;
-	}
 	hdd_apf_context_init(adapter);
 
-	if (QDF_STATUS_SUCCESS == status) {
-		policy_mgr_set_concurrency_mode(hdd_ctx->psoc,
-			session_type);
+	policy_mgr_set_concurrency_mode(hdd_ctx->psoc, session_type);
 
-		/* Adapter successfully added. Increment the vdev count */
-		hdd_ctx->current_intf_count++;
+	/* Adapter successfully added. Increment the vdev count */
+	hdd_ctx->current_intf_count++;
 
-		hdd_debug("current_intf_count=%d",
-		       hdd_ctx->current_intf_count);
+	hdd_debug("current_intf_count=%d", hdd_ctx->current_intf_count);
 
-		hdd_check_and_restart_sap_with_non_dfs_acs();
-	}
+	hdd_check_and_restart_sap_with_non_dfs_acs();
 
 	if (QDF_STATUS_SUCCESS != hdd_debugfs_init(adapter))
 		hdd_err("Interface %s wow debug_fs init failed",
@@ -6340,6 +6296,15 @@ struct hdd_adapter *hdd_open_adapter(struct hdd_context *hdd_ctx, uint8_t sessio
 	hdd_periodic_sta_stats_init(adapter);
 
 	return adapter;
+
+err_destroy_adapter_features_update_work:
+	hdd_adapter_feature_update_work_deinit(adapter);
+
+err_cleanup_adapter:
+	if (adapter) {
+		hdd_cleanup_adapter(hdd_ctx, adapter, rtnl_held);
+		adapter = NULL;
+	}
 
 err_free_netdev:
 	if (ndev)
@@ -6357,6 +6322,7 @@ static void __hdd_close_adapter(struct hdd_context *hdd_ctx,
 	policy_mgr_clear_concurrency_mode(hdd_ctx->psoc, adapter->device_mode);
 	qdf_event_destroy(&adapter->acs_complete_event);
 	qdf_event_destroy(&adapter->peer_cleanup_done);
+	hdd_adapter_feature_update_work_deinit(adapter);
 	hdd_cleanup_adapter(hdd_ctx, adapter, rtnl_held);
 
 	if (hdd_ctx->current_intf_count != 0)
@@ -6491,6 +6457,36 @@ hdd_peer_cleanup(struct hdd_context *hdd_ctx, struct hdd_adapter *adapter)
 	if (QDF_IS_STATUS_ERROR(qdf_status))
 		hdd_debug("peer_cleanup_done wait fail");
 }
+
+#ifdef FUNC_CALL_MAP
+
+/**
+ * hdd_dump_func_call_map() - Dump the function call map
+ *
+ * Return: None
+ */
+
+static void hdd_dump_func_call_map(void)
+{
+	char *cc_buf;
+
+	cc_buf = qdf_mem_malloc(QDF_FUNCTION_CALL_MAP_BUF_LEN);
+	/*
+	 * These logs are required as these indicates the start and end of the
+	 * dump for the auto script to parse
+	 */
+	hdd_info("Function call map dump start");
+	qdf_get_func_call_map(cc_buf);
+	qdf_trace_hex_dump(QDF_MODULE_ID_HDD,
+		QDF_TRACE_LEVEL_DEBUG, cc_buf, QDF_FUNCTION_CALL_MAP_BUF_LEN);
+	hdd_info("Function call map dump end");
+	qdf_mem_free(cc_buf);
+}
+#else
+static inline void hdd_dump_func_call_map(void)
+{
+}
+#endif
 
 QDF_STATUS hdd_stop_adapter(struct hdd_context *hdd_ctx,
 			    struct hdd_adapter *adapter)
@@ -6809,6 +6805,8 @@ QDF_STATUS hdd_stop_adapter(struct hdd_context *hdd_ctx,
 		adapter->scan_info.default_scan_ies_len = 0;
 	}
 
+	/* This function should be invoked at the end of this api*/
+	hdd_dump_func_call_map();
 	hdd_exit();
 
 	return QDF_STATUS_SUCCESS;
@@ -7718,9 +7716,13 @@ static void hdd_stop_p2p_go(struct hdd_adapter *adapter)
 static inline void hdd_delete_sta(struct hdd_adapter *adapter)
 {
 }
+
 #else
-static inline void hdd_stop_p2p_go(struct hdd_adapter *adapter)
+static void hdd_stop_p2p_go(struct hdd_adapter *adapter)
 {
+	hdd_debug("[SSR] send stop iface ap to supplicant");
+	cfg80211_stop_iface(adapter->hdd_ctx->wiphy, &adapter->wdev,
+			    GFP_KERNEL);
 }
 
 /**
@@ -8574,6 +8576,9 @@ void hdd_wlan_exit(struct hdd_context *hdd_ctx)
 #ifdef FEATURE_WLAN_CH_AVOID
 	mutex_destroy(&hdd_ctx->avoid_freq_lock);
 #endif
+
+	/* This function should be invoked at the end of this api*/
+	hdd_dump_func_call_map();
 }
 
 /**
@@ -11594,6 +11599,7 @@ static int hdd_update_cds_config(struct hdd_context *hdd_ctx)
 	struct cds_config_info *cds_cfg;
 	int value;
 	uint8_t band_capability;
+	uint32_t band_bitmap;
 	uint8_t ito_repeat_count;
 	bool crash_inject;
 	bool self_recovery;
@@ -11659,10 +11665,11 @@ static int hdd_update_cds_config(struct hdd_context *hdd_ctx)
 
 	cds_cfg->ito_repeat_count = ito_repeat_count;
 
-	status = ucfg_mlme_get_band_capability(hdd_ctx->psoc, &band_capability);
+	status = ucfg_mlme_get_band_capability(hdd_ctx->psoc, &band_bitmap);
 	if (QDF_IS_STATUS_ERROR(status))
 		goto exit;
 
+	band_capability = wlan_reg_band_bitmap_to_band_info(band_bitmap);
 	cds_cfg->bandcapability = band_capability;
 	cds_cfg->num_vdevs = hdd_ctx->config->num_vdevs;
 	cds_cfg->enable_tx_compl_tsf64 =
@@ -11688,10 +11695,11 @@ static int hdd_update_user_config(struct hdd_context *hdd_ctx)
 {
 	struct wlan_objmgr_psoc_user_config *user_config;
 	uint8_t band_capability;
+	uint32_t band_bitmap;
 	QDF_STATUS status;
 	bool value = false;
 
-	status = ucfg_mlme_get_band_capability(hdd_ctx->psoc, &band_capability);
+	status = ucfg_mlme_get_band_capability(hdd_ctx->psoc, &band_bitmap);
 	if (QDF_IS_STATUS_ERROR(status))
 		return -EIO;
 
@@ -11710,6 +11718,7 @@ static int hdd_update_user_config(struct hdd_context *hdd_ctx)
 	if (!QDF_IS_STATUS_SUCCESS(status))
 		hdd_err("Invalid 11h_enable flag");
 	user_config->is_11h_support_enabled = value;
+	band_capability = wlan_reg_band_bitmap_to_band_info(band_bitmap);
 	user_config->band_capability = band_capability;
 	wlan_objmgr_psoc_set_user_config(hdd_ctx->psoc, user_config);
 

@@ -1947,6 +1947,7 @@ static QDF_STATUS hdd_dis_connect_handler(struct hdd_adapter *adapter,
 		vdev = hdd_objmgr_get_vdev(adapter);
 		if (vdev) {
 			wlan_crypto_free_vdev_key(vdev);
+			wlan_crypto_reset_vdev_params(vdev);
 			hdd_objmgr_put_vdev(vdev);
 		}
 	}
@@ -3006,6 +3007,15 @@ static inline void hdd_netif_queue_enable(struct hdd_adapter *adapter)
 	}
 }
 
+static void hdd_save_connect_status(struct hdd_adapter *adapter,
+				    struct csr_roam_info *roam_info)
+{
+	if (!roam_info)
+		return;
+
+	adapter->connect_req_status = roam_info->reasonCode;
+}
+
 /**
  * hdd_association_completion_handler() - association completion handler
  * @adapter: pointer to adapter
@@ -3026,6 +3036,7 @@ hdd_association_completion_handler(struct hdd_adapter *adapter,
 	struct net_device *dev = adapter->dev;
 	struct hdd_context *hdd_ctx = WLAN_HDD_GET_CTX(adapter);
 	struct hdd_station_ctx *sta_ctx = WLAN_HDD_GET_STATION_CTX_PTR(adapter);
+	int8_t snr = 0;
 	QDF_STATUS qdf_status = QDF_STATUS_E_FAILURE;
 	uint8_t *reqRsnIe;
 	uint32_t reqRsnLength = DOT11F_IE_RSN_MAX_LEN, ie_len;
@@ -3049,6 +3060,24 @@ hdd_association_completion_handler(struct hdd_adapter *adapter,
 		return QDF_STATUS_E_NULL_VALUE;
 	}
 
+	hdd_get_rssi_snr_by_bssid(adapter, sta_ctx->conn_info.bssid.bytes,
+				  &adapter->rssi, &snr);
+
+	/* If RSSi is reported as positive then it is invalid */
+	if (adapter->rssi > 0) {
+		hdd_debug_rl("RSSI invalid %d", adapter->rssi);
+		adapter->rssi = 0;
+	}
+
+	hdd_debug("snr: %d, rssi: %d", snr, adapter->rssi);
+
+	sta_ctx->conn_info.signal = adapter->rssi;
+	sta_ctx->conn_info.noise =
+		sta_ctx->conn_info.signal - snr;
+	sta_ctx->cache_conn_info.signal = sta_ctx->conn_info.signal;
+	sta_ctx->cache_conn_info.noise = sta_ctx->conn_info.noise;
+
+	hdd_save_connect_status(adapter, roam_info);
 	/*
 	 * reset scan reject params if connection is success or we received
 	 * final failure from CSR after trying with all APs.
