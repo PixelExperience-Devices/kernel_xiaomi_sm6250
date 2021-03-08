@@ -1,0 +1,398 @@
+fs/ocfs2/super.c:			"WorkSeq: %lu\n", "DownCnvt",
+fs/cifs/smberr.h:#define ERRinvtid		5	/* The Tid specified in a command was
+fs/cifs/netmisc.c:	{ERRinvtid, -ENXIO},
+lib/raid6/mktables.c:	uint8_t exptbl[256], invtbl[256];
+lib/raid6/mktables.c:			invtbl[i + j] = v = gfpow(i + j, 254);
+lib/raid6/mktables.c:			printf("0x%02x,%c", invtbl[exptbl[i + j] ^ 1],
+drivers/sbus/char/envctrl.c:static void envtrl_i2c_test_pin(void)
+drivers/sbus/char/envctrl.c:	envtrl_i2c_test_pin();
+drivers/sbus/char/envctrl.c:	envtrl_i2c_test_pin();
+drivers/sbus/char/envctrl.c:	envtrl_i2c_test_pin();
+drivers/sbus/char/envctrl.c:	envtrl_i2c_test_pin();
+drivers/usb/serial/option.c: * that does not help, contact ddeschepper@nvtl.com
+drivers/media/rc/nuvoton-cir.h:#define nvt_dbg(text, ...) \
+drivers/media/rc/nuvoton-cir.h:#define nvt_dbg_verbose(text, ...) \
+drivers/media/rc/nuvoton-cir.h:#define nvt_dbg_wake(text, ...) \
+drivers/media/rc/nuvoton-cir.h:enum nvt_chip_ver {
+drivers/media/rc/nuvoton-cir.h:struct nvt_chip {
+drivers/media/rc/nuvoton-cir.h:	enum nvt_chip_ver chip_ver;
+drivers/media/rc/nuvoton-cir.h:struct nvt_dev {
+drivers/media/rc/nuvoton-cir.h:	enum nvt_chip_ver chip_ver;
+drivers/media/rc/nuvoton-cir.c:static void nvt_clear_cir_wake_fifo(struct nvt_dev *nvt);
+drivers/media/rc/nuvoton-cir.c:static const struct nvt_chip nvt_chips[] = {
+drivers/media/rc/nuvoton-cir.c:static inline struct device *nvt_get_dev(const struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	return nvt->rdev->dev.parent;
+drivers/media/rc/nuvoton-cir.c:static inline bool is_w83667hg(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	return nvt->chip_ver == NVT_W83667HG;
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_cr_write(struct nvt_dev *nvt, u8 val, u8 reg)
+drivers/media/rc/nuvoton-cir.c:	outb(reg, nvt->cr_efir);
+drivers/media/rc/nuvoton-cir.c:	outb(val, nvt->cr_efdr);
+drivers/media/rc/nuvoton-cir.c:static inline u8 nvt_cr_read(struct nvt_dev *nvt, u8 reg)
+drivers/media/rc/nuvoton-cir.c:	outb(reg, nvt->cr_efir);
+drivers/media/rc/nuvoton-cir.c:	return inb(nvt->cr_efdr);
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_set_reg_bit(struct nvt_dev *nvt, u8 val, u8 reg)
+drivers/media/rc/nuvoton-cir.c:	u8 tmp = nvt_cr_read(nvt, reg) | val;
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, tmp, reg);
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_clear_reg_bit(struct nvt_dev *nvt, u8 val, u8 reg)
+drivers/media/rc/nuvoton-cir.c:	u8 tmp = nvt_cr_read(nvt, reg) & ~val;
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, tmp, reg);
+drivers/media/rc/nuvoton-cir.c:static inline int nvt_efm_enable(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	if (!request_muxed_region(nvt->cr_efir, 2, NVT_DRIVER_NAME))
+drivers/media/rc/nuvoton-cir.c:	outb(EFER_EFM_ENABLE, nvt->cr_efir);
+drivers/media/rc/nuvoton-cir.c:	outb(EFER_EFM_ENABLE, nvt->cr_efir);
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_efm_disable(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	outb(EFER_EFM_DISABLE, nvt->cr_efir);
+drivers/media/rc/nuvoton-cir.c:	release_region(nvt->cr_efir, 2);
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_select_logical_dev(struct nvt_dev *nvt, u8 ldev)
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, ldev, CR_LOGICAL_DEV_SEL);
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_enable_logical_dev(struct nvt_dev *nvt, u8 ldev)
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_enable(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, ldev);
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, LOGICAL_DEV_ENABLE, CR_LOGICAL_DEV_EN);
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_disable(nvt);
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_disable_logical_dev(struct nvt_dev *nvt, u8 ldev)
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_enable(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, ldev);
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, LOGICAL_DEV_DISABLE, CR_LOGICAL_DEV_EN);
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_disable(nvt);
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_cir_reg_write(struct nvt_dev *nvt, u8 val, u8 offset)
+drivers/media/rc/nuvoton-cir.c:	outb(val, nvt->cir_addr + offset);
+drivers/media/rc/nuvoton-cir.c:static u8 nvt_cir_reg_read(struct nvt_dev *nvt, u8 offset)
+drivers/media/rc/nuvoton-cir.c:	return inb(nvt->cir_addr + offset);
+drivers/media/rc/nuvoton-cir.c:static inline void nvt_cir_wake_reg_write(struct nvt_dev *nvt,
+drivers/media/rc/nuvoton-cir.c:	outb(val, nvt->cir_wake_addr + offset);
+drivers/media/rc/nuvoton-cir.c:static u8 nvt_cir_wake_reg_read(struct nvt_dev *nvt, u8 offset)
+drivers/media/rc/nuvoton-cir.c:	return inb(nvt->cir_wake_addr + offset);
+drivers/media/rc/nuvoton-cir.c:static void nvt_set_ioaddr(struct nvt_dev *nvt, unsigned long *ioaddr)
+drivers/media/rc/nuvoton-cir.c:	old_addr = nvt_cr_read(nvt, CR_CIR_BASE_ADDR_HI) << 8;
+drivers/media/rc/nuvoton-cir.c:	old_addr |= nvt_cr_read(nvt, CR_CIR_BASE_ADDR_LO);
+drivers/media/rc/nuvoton-cir.c:		nvt_cr_write(nvt, *ioaddr >> 8, CR_CIR_BASE_ADDR_HI);
+drivers/media/rc/nuvoton-cir.c:		nvt_cr_write(nvt, *ioaddr & 0xff, CR_CIR_BASE_ADDR_LO);
+drivers/media/rc/nuvoton-cir.c:static void nvt_write_wakeup_codes(struct rc_dev *dev,
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = dev->priv;
+drivers/media/rc/nuvoton-cir.c:	spin_lock_irqsave(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_clear_cir_wake_fifo(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, count, CIR_WAKE_FIFO_CMP_DEEP);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, tolerance, CIR_WAKE_FIFO_CMP_TOL);
+drivers/media/rc/nuvoton-cir.c:	config = nvt_cir_wake_reg_read(nvt, CIR_WAKE_IRCON);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, config | CIR_WAKE_IRCON_MODE1,
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_write(nvt, wbuf[i], CIR_WAKE_WR_FIFO_DATA);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, config, CIR_WAKE_IRCON);
+drivers/media/rc/nuvoton-cir.c:	spin_unlock_irqrestore(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = rc_dev->priv;
+drivers/media/rc/nuvoton-cir.c:	spin_lock_irqsave(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	fifo_len = nvt_cir_wake_reg_read(nvt, CIR_WAKE_FIFO_COUNT);
+drivers/media/rc/nuvoton-cir.c:	while (nvt_cir_wake_reg_read(nvt, CIR_WAKE_RD_FIFO_ONLY_IDX))
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_RD_FIFO_ONLY);
+drivers/media/rc/nuvoton-cir.c:		duration = nvt_cir_wake_reg_read(nvt, CIR_WAKE_RD_FIFO_ONLY);
+drivers/media/rc/nuvoton-cir.c:	spin_unlock_irqrestore(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_write_wakeup_codes(rc_dev, wake_buf, count);
+drivers/media/rc/nuvoton-cir.c:static void cir_dump_regs(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_enable(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, LOGICAL_DEV_CIR);
+drivers/media/rc/nuvoton-cir.c:		nvt_cr_read(nvt, CR_LOGICAL_DEV_EN));
+drivers/media/rc/nuvoton-cir.c:		(nvt_cr_read(nvt, CR_CIR_BASE_ADDR_HI) << 8) |
+drivers/media/rc/nuvoton-cir.c:		nvt_cr_read(nvt, CR_CIR_BASE_ADDR_LO));
+drivers/media/rc/nuvoton-cir.c:		nvt_cr_read(nvt, CR_CIR_IRQ_RSRC));
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_disable(nvt);
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * IRCON:     0x%x\n", nvt_cir_reg_read(nvt, CIR_IRCON));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * IRSTS:     0x%x\n", nvt_cir_reg_read(nvt, CIR_IRSTS));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * IREN:      0x%x\n", nvt_cir_reg_read(nvt, CIR_IREN));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * RXFCONT:   0x%x\n", nvt_cir_reg_read(nvt, CIR_RXFCONT));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * CP:        0x%x\n", nvt_cir_reg_read(nvt, CIR_CP));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * CC:        0x%x\n", nvt_cir_reg_read(nvt, CIR_CC));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * SLCH:      0x%x\n", nvt_cir_reg_read(nvt, CIR_SLCH));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * SLCL:      0x%x\n", nvt_cir_reg_read(nvt, CIR_SLCL));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * FIFOCON:   0x%x\n", nvt_cir_reg_read(nvt, CIR_FIFOCON));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * IRFIFOSTS: 0x%x\n", nvt_cir_reg_read(nvt, CIR_IRFIFOSTS));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * SRXFIFO:   0x%x\n", nvt_cir_reg_read(nvt, CIR_SRXFIFO));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * TXFCONT:   0x%x\n", nvt_cir_reg_read(nvt, CIR_TXFCONT));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * STXFIFO:   0x%x\n", nvt_cir_reg_read(nvt, CIR_STXFIFO));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * FCCH:      0x%x\n", nvt_cir_reg_read(nvt, CIR_FCCH));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * FCCL:      0x%x\n", nvt_cir_reg_read(nvt, CIR_FCCL));
+drivers/media/rc/nuvoton-cir.c:	pr_info(" * IRFSM:     0x%x\n", nvt_cir_reg_read(nvt, CIR_IRFSM));
+drivers/media/rc/nuvoton-cir.c:static void cir_wake_dump_regs(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_enable(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, LOGICAL_DEV_CIR_WAKE);
+drivers/media/rc/nuvoton-cir.c:		nvt_cr_read(nvt, CR_LOGICAL_DEV_EN));
+drivers/media/rc/nuvoton-cir.c:		(nvt_cr_read(nvt, CR_CIR_BASE_ADDR_HI) << 8) |
+drivers/media/rc/nuvoton-cir.c:		nvt_cr_read(nvt, CR_CIR_BASE_ADDR_LO));
+drivers/media/rc/nuvoton-cir.c:		nvt_cr_read(nvt, CR_CIR_IRQ_RSRC));
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_disable(nvt);
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_IRCON));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_IRSTS));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_IREN));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_FIFO_CMP_DEEP));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_FIFO_CMP_TOL));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_FIFO_COUNT));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_SLCH));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_SLCL));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_FIFOCON));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_SRXFSTS));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_SAMPLE_RX_FIFO));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_WR_FIFO_DATA));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_RD_FIFO_ONLY));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_RD_FIFO_ONLY_IDX));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_FIFO_IGNORE));
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_wake_reg_read(nvt, CIR_WAKE_IRFSM));
+drivers/media/rc/nuvoton-cir.c:	fifo_len = nvt_cir_wake_reg_read(nvt, CIR_WAKE_FIFO_COUNT);
+drivers/media/rc/nuvoton-cir.c:			nvt_cir_wake_reg_read(nvt, CIR_WAKE_RD_FIFO_ONLY));
+drivers/media/rc/nuvoton-cir.c:static inline const char *nvt_find_chip(struct nvt_dev *nvt, int id)
+drivers/media/rc/nuvoton-cir.c:	for (i = 0; i < ARRAY_SIZE(nvt_chips); i++)
+drivers/media/rc/nuvoton-cir.c:		if ((id & SIO_ID_MASK) == nvt_chips[i].chip_ver) {
+drivers/media/rc/nuvoton-cir.c:			nvt->chip_ver = nvt_chips[i].chip_ver;
+drivers/media/rc/nuvoton-cir.c:			return nvt_chips[i].name;
+drivers/media/rc/nuvoton-cir.c:static int nvt_hw_detect(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	struct device *dev = nvt_get_dev(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_enable(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt->chip_major = nvt_cr_read(nvt, CR_CHIP_ID_HI);
+drivers/media/rc/nuvoton-cir.c:	if (nvt->chip_major == 0xff) {
+drivers/media/rc/nuvoton-cir.c:		nvt_efm_disable(nvt);
+drivers/media/rc/nuvoton-cir.c:		nvt->cr_efir = CR_EFIR2;
+drivers/media/rc/nuvoton-cir.c:		nvt->cr_efdr = CR_EFDR2;
+drivers/media/rc/nuvoton-cir.c:		nvt_efm_enable(nvt);
+drivers/media/rc/nuvoton-cir.c:		nvt->chip_major = nvt_cr_read(nvt, CR_CHIP_ID_HI);
+drivers/media/rc/nuvoton-cir.c:	nvt->chip_minor = nvt_cr_read(nvt, CR_CHIP_ID_LO);
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_disable(nvt);
+drivers/media/rc/nuvoton-cir.c:	chip_id = nvt->chip_major << 8 | nvt->chip_minor;
+drivers/media/rc/nuvoton-cir.c:	chip_name = nvt_find_chip(nvt, chip_id);
+drivers/media/rc/nuvoton-cir.c:			 nvt->chip_major, nvt->chip_minor);
+drivers/media/rc/nuvoton-cir.c:			 chip_name, nvt->chip_major, nvt->chip_minor);
+drivers/media/rc/nuvoton-cir.c:static void nvt_cir_ldev_init(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	if (is_w83667hg(nvt)) {
+drivers/media/rc/nuvoton-cir.c:	val = nvt_cr_read(nvt, psreg);
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, val, psreg);
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, LOGICAL_DEV_CIR);
+drivers/media/rc/nuvoton-cir.c:	nvt_set_ioaddr(nvt, &nvt->cir_addr);
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, nvt->cir_irq, CR_CIR_IRQ_RSRC);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("CIR initialized, base io port address: 0x%lx, irq: %d",
+drivers/media/rc/nuvoton-cir.c:		nvt->cir_addr, nvt->cir_irq);
+drivers/media/rc/nuvoton-cir.c:static void nvt_cir_wake_ldev_init(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, LOGICAL_DEV_ACPI);
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, LOGICAL_DEV_ENABLE, CR_LOGICAL_DEV_EN);
+drivers/media/rc/nuvoton-cir.c:	nvt_set_reg_bit(nvt, CIR_WAKE_ENABLE_BIT, CR_ACPI_CIR_WAKE);
+drivers/media/rc/nuvoton-cir.c:	nvt_set_reg_bit(nvt, PME_INTR_CIR_PASS_BIT, CR_ACPI_IRQ_EVENTS2);
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, LOGICAL_DEV_CIR_WAKE);
+drivers/media/rc/nuvoton-cir.c:	nvt_set_ioaddr(nvt, &nvt->cir_wake_addr);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("CIR Wake initialized, base io port address: 0x%lx",
+drivers/media/rc/nuvoton-cir.c:		nvt->cir_wake_addr);
+drivers/media/rc/nuvoton-cir.c:static void nvt_clear_cir_fifo(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	u8 val = nvt_cir_reg_read(nvt, CIR_FIFOCON);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, val | CIR_FIFOCON_RXFIFOCLR, CIR_FIFOCON);
+drivers/media/rc/nuvoton-cir.c:static void nvt_clear_cir_wake_fifo(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	config = nvt_cir_wake_reg_read(nvt, CIR_WAKE_IRCON);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, config & ~CIR_WAKE_IRCON_MODE0,
+drivers/media/rc/nuvoton-cir.c:	val = nvt_cir_wake_reg_read(nvt, CIR_WAKE_FIFOCON);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, val | CIR_WAKE_FIFOCON_RXFIFOCLR,
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, config, CIR_WAKE_IRCON);
+drivers/media/rc/nuvoton-cir.c:static void nvt_clear_tx_fifo(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	val = nvt_cir_reg_read(nvt, CIR_FIFOCON);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, val | CIR_FIFOCON_TXFIFOCLR, CIR_FIFOCON);
+drivers/media/rc/nuvoton-cir.c:static void nvt_set_cir_iren(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, iren, CIR_IREN);
+drivers/media/rc/nuvoton-cir.c:static void nvt_cir_regs_init(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, CIR_RX_LIMIT_COUNT >> 8, CIR_SLCH);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, CIR_RX_LIMIT_COUNT & 0xff, CIR_SLCL);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, CIR_FIFOCON_TX_TRIGGER_LEV |
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt,
+drivers/media/rc/nuvoton-cir.c:	nvt_clear_cir_fifo(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_clear_tx_fifo(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, 0xff, CIR_IRSTS);
+drivers/media/rc/nuvoton-cir.c:	nvt_set_cir_iren(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_enable_logical_dev(nvt, LOGICAL_DEV_CIR);
+drivers/media/rc/nuvoton-cir.c:static void nvt_cir_wake_regs_init(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, CIR_WAKE_IRCON_MODE0 |
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, 0xff, CIR_WAKE_IRSTS);
+drivers/media/rc/nuvoton-cir.c:	nvt_enable_logical_dev(nvt, LOGICAL_DEV_CIR_WAKE);
+drivers/media/rc/nuvoton-cir.c:static void nvt_enable_wake(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_enable(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, LOGICAL_DEV_ACPI);
+drivers/media/rc/nuvoton-cir.c:	nvt_set_reg_bit(nvt, CIR_WAKE_ENABLE_BIT, CR_ACPI_CIR_WAKE);
+drivers/media/rc/nuvoton-cir.c:	nvt_set_reg_bit(nvt, PME_INTR_CIR_PASS_BIT, CR_ACPI_IRQ_EVENTS2);
+drivers/media/rc/nuvoton-cir.c:	nvt_select_logical_dev(nvt, LOGICAL_DEV_CIR_WAKE);
+drivers/media/rc/nuvoton-cir.c:	nvt_cr_write(nvt, LOGICAL_DEV_ENABLE, CR_LOGICAL_DEV_EN);
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_disable(nvt);
+drivers/media/rc/nuvoton-cir.c:	spin_lock_irqsave(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, CIR_WAKE_IRCON_MODE0 | CIR_WAKE_IRCON_RXEN |
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, 0xff, CIR_WAKE_IRSTS);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_reg_write(nvt, 0, CIR_WAKE_IREN);
+drivers/media/rc/nuvoton-cir.c:	spin_unlock_irqrestore(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:static u32 nvt_rx_carrier_detect(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	count = nvt_cir_reg_read(nvt, CIR_FCCL) |
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_reg_read(nvt, CIR_FCCH) << 8;
+drivers/media/rc/nuvoton-cir.c:	for (i = 0; i < nvt->pkts; i++) {
+drivers/media/rc/nuvoton-cir.c:		if (nvt->buf[i] & BUF_PULSE_BIT)
+drivers/media/rc/nuvoton-cir.c:			duration += nvt->buf[i] & BUF_LEN_MASK;
+drivers/media/rc/nuvoton-cir.c:		dev_notice(nvt_get_dev(nvt),
+drivers/media/rc/nuvoton-cir.c:		nvt_dbg("WTF? Carrier frequency out of range!");
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("Carrier frequency: %u (count %u, duration %u)",
+drivers/media/rc/nuvoton-cir.c:static int nvt_set_tx_carrier(struct rc_dev *dev, u32 carrier)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = dev->priv;
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, 1, CIR_CP);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, val & 0xff, CIR_CC);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("cp: 0x%x cc: 0x%x\n",
+drivers/media/rc/nuvoton-cir.c:		nvt_cir_reg_read(nvt, CIR_CP), nvt_cir_reg_read(nvt, CIR_CC));
+drivers/media/rc/nuvoton-cir.c:static int nvt_ir_raw_set_wakeup_filter(struct rc_dev *dev,
+drivers/media/rc/nuvoton-cir.c:	nvt_write_wakeup_codes(dev, wake_buf, count);
+drivers/media/rc/nuvoton-cir.c:static void nvt_dump_rx_buf(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	printk(KERN_DEBUG "%s (len %d): ", __func__, nvt->pkts);
+drivers/media/rc/nuvoton-cir.c:	for (i = 0; (i < nvt->pkts) && (i < RX_BUF_LEN); i++)
+drivers/media/rc/nuvoton-cir.c:		printk(KERN_CONT "0x%02x ", nvt->buf[i]);
+drivers/media/rc/nuvoton-cir.c:static void nvt_process_rx_ir_data(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg_verbose("%s firing", __func__);
+drivers/media/rc/nuvoton-cir.c:		nvt_dump_rx_buf(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg_verbose("Processing buffer of len %d", nvt->pkts);
+drivers/media/rc/nuvoton-cir.c:	for (i = 0; i < nvt->pkts; i++) {
+drivers/media/rc/nuvoton-cir.c:		sample = nvt->buf[i];
+drivers/media/rc/nuvoton-cir.c:		nvt_dbg("Storing %s with duration %d",
+drivers/media/rc/nuvoton-cir.c:		ir_raw_event_store_with_filter(nvt->rdev, &rawir);
+drivers/media/rc/nuvoton-cir.c:	nvt->pkts = 0;
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("Calling ir_raw_event_handle\n");
+drivers/media/rc/nuvoton-cir.c:	ir_raw_event_handle(nvt->rdev);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg_verbose("%s done", __func__);
+drivers/media/rc/nuvoton-cir.c:static void nvt_handle_rx_fifo_overrun(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	dev_warn(nvt_get_dev(nvt), "RX FIFO overrun detected, flushing data!");
+drivers/media/rc/nuvoton-cir.c:	nvt->pkts = 0;
+drivers/media/rc/nuvoton-cir.c:	nvt_clear_cir_fifo(nvt);
+drivers/media/rc/nuvoton-cir.c:	ir_raw_event_reset(nvt->rdev);
+drivers/media/rc/nuvoton-cir.c:static void nvt_get_rx_ir_data(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	fifocount = nvt_cir_reg_read(nvt, CIR_RXFCONT);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("attempting to fetch %u bytes from hw rx fifo", fifocount);
+drivers/media/rc/nuvoton-cir.c:		nvt->buf[i] = nvt_cir_reg_read(nvt, CIR_SRXFIFO);
+drivers/media/rc/nuvoton-cir.c:	nvt->pkts = fifocount;
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("%s: pkts now %d", __func__, nvt->pkts);
+drivers/media/rc/nuvoton-cir.c:	nvt_process_rx_ir_data(nvt);
+drivers/media/rc/nuvoton-cir.c:static void nvt_cir_log_irqs(u8 status, u8 iren)
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("IRQ 0x%02x (IREN 0x%02x) :%s%s%s%s%s%s%s%s%s",
+drivers/media/rc/nuvoton-cir.c:static irqreturn_t nvt_cir_isr(int irq, void *data)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = data;
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg_verbose("%s firing", __func__);
+drivers/media/rc/nuvoton-cir.c:	spin_lock(&nvt->lock);
+drivers/media/rc/nuvoton-cir.c:	status = nvt_cir_reg_read(nvt, CIR_IRSTS);
+drivers/media/rc/nuvoton-cir.c:	iren = nvt_cir_reg_read(nvt, CIR_IREN);
+drivers/media/rc/nuvoton-cir.c:		spin_unlock(&nvt->lock);
+drivers/media/rc/nuvoton-cir.c:		nvt_dbg_verbose("Spurious interrupt detected");
+drivers/media/rc/nuvoton-cir.c:		spin_unlock(&nvt->lock);
+drivers/media/rc/nuvoton-cir.c:		nvt_dbg_verbose("%s exiting, IRSTS 0x0", __func__);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, status, CIR_IRSTS);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, 0, CIR_IRSTS);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_log_irqs(status, iren);
+drivers/media/rc/nuvoton-cir.c:		nvt_handle_rx_fifo_overrun(nvt);
+drivers/media/rc/nuvoton-cir.c:		nvt_get_rx_ir_data(nvt);
+drivers/media/rc/nuvoton-cir.c:	spin_unlock(&nvt->lock);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg_verbose("%s done", __func__);
+drivers/media/rc/nuvoton-cir.c:static void nvt_disable_cir(struct nvt_dev *nvt)
+drivers/media/rc/nuvoton-cir.c:	spin_lock_irqsave(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, 0, CIR_IREN);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, 0xff, CIR_IRSTS);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, 0, CIR_IRCON);
+drivers/media/rc/nuvoton-cir.c:	nvt_clear_cir_fifo(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_clear_tx_fifo(nvt);
+drivers/media/rc/nuvoton-cir.c:	spin_unlock_irqrestore(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_disable_logical_dev(nvt, LOGICAL_DEV_CIR);
+drivers/media/rc/nuvoton-cir.c:static int nvt_open(struct rc_dev *dev)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = dev->priv;
+drivers/media/rc/nuvoton-cir.c:	spin_lock_irqsave(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, CIR_IRCON_TXEN | CIR_IRCON_RXEN |
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, 0xff, CIR_IRSTS);
+drivers/media/rc/nuvoton-cir.c:	nvt_set_cir_iren(nvt);
+drivers/media/rc/nuvoton-cir.c:	spin_unlock_irqrestore(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_enable_logical_dev(nvt, LOGICAL_DEV_CIR);
+drivers/media/rc/nuvoton-cir.c:static void nvt_close(struct rc_dev *dev)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = dev->priv;
+drivers/media/rc/nuvoton-cir.c:	nvt_disable_cir(nvt);
+drivers/media/rc/nuvoton-cir.c:static int nvt_probe(struct pnp_dev *pdev, const struct pnp_device_id *dev_id)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt;
+drivers/media/rc/nuvoton-cir.c:	nvt = devm_kzalloc(&pdev->dev, sizeof(struct nvt_dev), GFP_KERNEL);
+drivers/media/rc/nuvoton-cir.c:	if (!nvt)
+drivers/media/rc/nuvoton-cir.c:	nvt->rdev = devm_rc_allocate_device(&pdev->dev, RC_DRIVER_IR_RAW);
+drivers/media/rc/nuvoton-cir.c:	if (!nvt->rdev)
+drivers/media/rc/nuvoton-cir.c:	rdev = nvt->rdev;
+drivers/media/rc/nuvoton-cir.c:	nvt->cir_addr = pnp_port_start(pdev, 0);
+drivers/media/rc/nuvoton-cir.c:	nvt->cir_irq  = pnp_irq(pdev, 0);
+drivers/media/rc/nuvoton-cir.c:	nvt->cir_wake_addr = pnp_port_start(pdev, 1);
+drivers/media/rc/nuvoton-cir.c:	nvt->cr_efir = CR_EFIR;
+drivers/media/rc/nuvoton-cir.c:	nvt->cr_efdr = CR_EFDR;
+drivers/media/rc/nuvoton-cir.c:	spin_lock_init(&nvt->lock);
+drivers/media/rc/nuvoton-cir.c:	pnp_set_drvdata(pdev, nvt);
+drivers/media/rc/nuvoton-cir.c:	ret = nvt_hw_detect(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_enable(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_ldev_init(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_ldev_init(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_efm_disable(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_regs_init(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_regs_init(nvt);
+drivers/media/rc/nuvoton-cir.c:	rdev->priv = nvt;
+drivers/media/rc/nuvoton-cir.c:	rdev->open = nvt_open;
+drivers/media/rc/nuvoton-cir.c:	rdev->close = nvt_close;
+drivers/media/rc/nuvoton-cir.c:	rdev->s_tx_carrier = nvt_set_tx_carrier;
+drivers/media/rc/nuvoton-cir.c:	rdev->s_wakeup_filter = nvt_ir_raw_set_wakeup_filter;
+drivers/media/rc/nuvoton-cir.c:	rdev->input_id.product = nvt->chip_major;
+drivers/media/rc/nuvoton-cir.c:	rdev->input_id.version = nvt->chip_minor;
+drivers/media/rc/nuvoton-cir.c:	if (!devm_request_region(&pdev->dev, nvt->cir_addr,
+drivers/media/rc/nuvoton-cir.c:	ret = devm_request_irq(&pdev->dev, nvt->cir_irq, nvt_cir_isr,
+drivers/media/rc/nuvoton-cir.c:			       IRQF_SHARED, NVT_DRIVER_NAME, nvt);
+drivers/media/rc/nuvoton-cir.c:	if (!devm_request_region(&pdev->dev, nvt->cir_wake_addr,
+drivers/media/rc/nuvoton-cir.c:		cir_dump_regs(nvt);
+drivers/media/rc/nuvoton-cir.c:		cir_wake_dump_regs(nvt);
+drivers/media/rc/nuvoton-cir.c:static void nvt_remove(struct pnp_dev *pdev)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = pnp_get_drvdata(pdev);
+drivers/media/rc/nuvoton-cir.c:	device_remove_file(&nvt->rdev->dev, &dev_attr_wakeup_data);
+drivers/media/rc/nuvoton-cir.c:	nvt_disable_cir(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_enable_wake(nvt);
+drivers/media/rc/nuvoton-cir.c:static int nvt_suspend(struct pnp_dev *pdev, pm_message_t state)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = pnp_get_drvdata(pdev);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("%s called", __func__);
+drivers/media/rc/nuvoton-cir.c:	spin_lock_irqsave(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_reg_write(nvt, 0, CIR_IREN);
+drivers/media/rc/nuvoton-cir.c:	spin_unlock_irqrestore(&nvt->lock, flags);
+drivers/media/rc/nuvoton-cir.c:	nvt_disable_logical_dev(nvt, LOGICAL_DEV_CIR);
+drivers/media/rc/nuvoton-cir.c:	nvt_enable_wake(nvt);
+drivers/media/rc/nuvoton-cir.c:static int nvt_resume(struct pnp_dev *pdev)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = pnp_get_drvdata(pdev);
+drivers/media/rc/nuvoton-cir.c:	nvt_dbg("%s called", __func__);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_regs_init(nvt);
+drivers/media/rc/nuvoton-cir.c:	nvt_cir_wake_regs_init(nvt);
+drivers/media/rc/nuvoton-cir.c:static void nvt_shutdown(struct pnp_dev *pdev)
+drivers/media/rc/nuvoton-cir.c:	struct nvt_dev *nvt = pnp_get_drvdata(pdev);
+drivers/media/rc/nuvoton-cir.c:	nvt_enable_wake(nvt);
+drivers/media/rc/nuvoton-cir.c:static const struct pnp_device_id nvt_ids[] = {
+drivers/media/rc/nuvoton-cir.c:static struct pnp_driver nvt_driver = {
+drivers/media/rc/nuvoton-cir.c:	.id_table	= nvt_ids,
+drivers/media/rc/nuvoton-cir.c:	.probe		= nvt_probe,
+drivers/media/rc/nuvoton-cir.c:	.remove		= nvt_remove,
+drivers/media/rc/nuvoton-cir.c:	.suspend	= nvt_suspend,
+drivers/media/rc/nuvoton-cir.c:	.resume		= nvt_resume,
+drivers/media/rc/nuvoton-cir.c:	.shutdown	= nvt_shutdown,
+drivers/media/rc/nuvoton-cir.c:MODULE_DEVICE_TABLE(pnp, nvt_ids);
+drivers/media/rc/nuvoton-cir.c:module_pnp_driver(nvt_driver);
+drivers/power/supply/qcom/qpnp-qg.c:						chip->batt_id_ohm / 1000, "j6b-nvt-5020mah");
+drivers/power/supply/qcom/qpnp-qg.c:						chip->batt_id_ohm / 1000, "j6b-nvt-5020mah");
+drivers/staging/qca-wifi-host-cmn/target_if/son/src/target_if_son.c:int8_t son_ol_sanitize_util_invtl(struct wlan_objmgr_pdev *pdev,
+drivers/staging/qca-wifi-host-cmn/target_if/son/src/target_if_son.c:	tx_ops->son_tx_ops.son_sanity_util_intvl = son_ol_sanitize_util_invtl;
+drivers/staging/qca-wifi-host-cmn/target_if/son/src/target_if_son.c:int8_t son_ol_sanitize_util_invtl(struct wlan_objmgr_pdev *pdev,
+drivers/staging/qca-wifi-host-cmn/target_if/son/inc/target_if_son.h:int8_t son_ol_sanitize_util_invtl(struct wlan_objmgr_pdev *pdev,
+drivers/scsi/megaraid/megaraid_sas.h:	 * Define FW pkg version (set in envt v'bles on OEM basis)
+drivers/scsi/lpfc/lpfc_vport.c:	/* for all the error states we will set the invternal state to FAILED */
+arch/sparc/include/uapi/asm/envctrl.h: *	fd = open("/dev/envtrl", O_RDONLY);
+arch/arm/boot/compressed/ll_char_wr.S:	.word	con_charconvtable
+arch/arm/boot/compressed/ll_char_wr.S:ENTRY(con_charconvtable)
+arch/arm/mach-rpc/include/mach/uncompress.h:extern unsigned long con_charconvtable[256];
+arch/arm/mach-rpc/include/mach/uncompress.h:			con_charconvtable[i] =
+arch/arm/mach-rpc/include/mach/uncompress.h:			con_charconvtable[i] =
+arch/arm64/boot/dts/qcom/cust-atoll-idp.dtsi:	#include "batterydata-J6B-nvt-5020mah.dtsi"
+arch/arm64/boot/dts/qcom/batterydata-J6B-nvt-5020mah.dtsi:qcom,j6b-nvt-5020mah {
+arch/arm64/boot/dts/qcom/batterydata-J6B-nvt-5020mah.dtsi:	qcom,battery-type = "j6b-nvt-5020mah";
+Documentation/admin-guide/devices.txt:		128 = /dev/iseries/nvt0		First virtual tape, mode 0, no rewind
+Documentation/admin-guide/devices.txt:		129 = /dev/iseries/nvt1		Second virtual tape, mode 0, no rewind
+Documentation/admin-guide/devices.txt:		160 = /dev/iseries/nvt0l	First virtual tape, mode 1, no rewind
+Documentation/admin-guide/devices.txt:		161 = /dev/iseries/nvt1l	Second virtual tape, mode 1, no rewind
+Documentation/admin-guide/devices.txt:		192 = /dev/iseries/nvt0m	First virtual tape, mode 2, no rewind
+Documentation/admin-guide/devices.txt:		193 = /dev/iseries/nvt1m	Second virtual tape, mode 2, no rewind
+Documentation/admin-guide/devices.txt:		224 = /dev/iseries/nvt0a	First virtual tape, mode 3, no rewind
+Documentation/admin-guide/devices.txt:		225 = /dev/iseries/nvt1a	Second virtual tape, mode 3, no rewind
+Binary file .git/index matches
+Binary file .git/objects/pack/pack-c55d12086f5a295f5d7f9a1e5560b5cec8be9b65.idx matches
+Binary file .git/objects/pack/pack-c55d12086f5a295f5d7f9a1e5560b5cec8be9b65.pack matches
+net/sched/sch_hfsc.c:vttree_get_minvt(struct hfsc_class *cl, u64 cur_time)
+net/sched/sch_hfsc.c:		cl = vttree_get_minvt(&q->root, cur_time);

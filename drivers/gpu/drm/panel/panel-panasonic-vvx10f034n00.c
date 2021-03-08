@@ -330,5 +330,5 @@ static struct mipi_dsi_driver wuxga_nt_panel_driver = {
 module_mipi_dsi_driver(wuxga_nt_panel_driver);
 
 MODULE_AUTHOR("Werner Johansson <werner.johansson@sonymobile.com>");
-MODULE_DESCRIPTION("Panasonic VVX10F034N00 Novatek NT1397-based WUXGA (1920x1200) video mode panel driver");
+MODULE_DESCRIPTION("Panasonic VVX10F034N00 NT1397-based WUXGA (1920x1200) video mode panel driver");
 MODULE_LICENSE("GPL v2");
